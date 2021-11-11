@@ -29,6 +29,11 @@ public class LoginActivity extends AppCompatActivity {
     // Set the content view to activity_login layout view
     setContentView(R.layout.activity_login);
 
+    // Already signed in
+    if (ParseUser.getCurrentUser() != null) {
+      goMainActivity();
+    }
+
     // Attach references to buttons in activity_login
     etUsername = findViewById(R.id.etUsername);
     etPassword = findViewById(R.id.etPassword);
@@ -80,5 +85,6 @@ public class LoginActivity extends AppCompatActivity {
   private void goMainActivity() {
     Intent i = new Intent(this, MainActivity.class);
     startActivity(i);
+    finish();
   }
 }
