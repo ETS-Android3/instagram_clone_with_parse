@@ -27,7 +27,7 @@ N/A
 
 Here's a walkthrough of implemented user stories:
 
-<img src='instaparse' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
+<img src='instaparse.gif' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
