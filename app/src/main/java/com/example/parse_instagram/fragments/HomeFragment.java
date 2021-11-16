@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -13,17 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.parse_instagram.Post;
+import com.example.parse_instagram.PostsAdapter;
 import com.example.parse_instagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
   public static final String TAG = "HomeFragment";
   private RecyclerView rvPosts;
+  protected PostsAdapter adapter;
+  protected List<Post> allPosts;
 
   public HomeFragment() {
     // Required empty public constructor
@@ -41,28 +46,36 @@ public class HomeFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     rvPosts = view.findViewById(R.id.rv_posts);
 
+    allPosts = new ArrayList<>();
+    adapter = new PostsAdapter(getContext(), allPosts);
+
     // 1. Layout for one row in the list
 
 
-    // 2. Create the adapater
+
+    // 2. Create the adapter
 
 
     // 3. Create the data source
 
 
     // 4. Set the adapter on the recycler view
-
+    rvPosts.setAdapter(adapter);
 
     // 5. Set the layout manager on the recycler view
-
+    rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+    queryPosts();
   }
 
-  private void queryPosts() {
+  protected void queryPosts() {
 
     // Specify which class to query
     ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
     query.include(Post.KEY_USER);
+    query.setLimit(20);
+    query.addDescendingOrder(Post.KEY_CREATED_AT);
     query.findInBackground(new FindCallback<Post>() {
+
       @Override
       public void done(List<Post> posts, ParseException e) {
         if (e != null) {
@@ -71,7 +84,8 @@ public class HomeFragment extends Fragment {
         for (Post post : posts) {
           Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
         }
-
+        allPosts.addAll(posts);
+        adapter.notifyDataSetChanged();
       }
     });
   }
