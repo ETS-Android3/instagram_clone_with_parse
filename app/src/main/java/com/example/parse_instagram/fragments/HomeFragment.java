@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+  private SwipeRefreshLayout swipeContainer;
+
   public static final String TAG = "HomeFragment";
   private RecyclerView rvPosts;
   protected PostsAdapter adapter;
@@ -37,7 +40,7 @@ public class HomeFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+    // Inflate the layout
     return inflater.inflate(R.layout.fragment_home, container, false);
   }
 
@@ -48,17 +51,19 @@ public class HomeFragment extends Fragment {
 
     allPosts = new ArrayList<>();
     adapter = new PostsAdapter(getContext(), allPosts);
+    swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+    swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+      @Override
+      public void onRefresh() {
+        allPosts.clear();
+        swipeContainer.setRefreshing(false);
+        queryPosts();
+      }
+    });
 
     // 1. Layout for one row in the list
-
-
-
     // 2. Create the adapter
-
-
     // 3. Create the data source
-
-
     // 4. Set the adapter on the recycler view
     rvPosts.setAdapter(adapter);
 
